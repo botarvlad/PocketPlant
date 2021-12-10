@@ -18,6 +18,12 @@ class PlantData extends Model
         'temp',
     ];
 
+    protected $casts = [
+        'umid_sol' => 'float',
+        'umid_atm' => 'float',
+        'temp' => 'float'
+    ];
+
     public function plant() {
         return $this->belongsTo(Plant::class);
     }
