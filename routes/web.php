@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\PlantDataController;
+use App\Http\Controllers\PlantController;
+use App\Models\Plant;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +31,13 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+
+    // Plants
+    Route::get('/plants', [PlantController::class, 'index'])->name('plants.index');
+    Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
+    Route::get('/plants/add', [PlantController::class, 'add'])->name('plants.add');
+});
 
 Route::get('/plantdata', [PlantDataController::class, 'get'])->name('getplantdata');

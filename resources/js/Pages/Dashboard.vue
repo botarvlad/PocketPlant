@@ -24,7 +24,7 @@
     export default defineComponent({
         components: {
             AppLayout,
-            Welcome,
+            Welcome
         },
     })
 </script>

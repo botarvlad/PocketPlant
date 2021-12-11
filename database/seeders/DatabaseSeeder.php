@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use Database\Seeders\DevicesTableSeeder;
+use Database\Seeders\UsersTableSeeder;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,5 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        $seeds = [
+            DevicesTableSeeder::class,
+            UsersTableSeeder::class
+        ];
+
+        $this->call($seeds);
     }
 }
