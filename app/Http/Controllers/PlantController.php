@@ -21,4 +21,8 @@ class PlantController extends Controller
             'plant_datas' => PlantData::where('plant_id', $plant->id)->get()
         ]);
     }
+
+    public function add() {
+        return Inertia::render('Plant/CreatePlant');
+    }
 }

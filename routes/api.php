@@ -23,14 +23,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/postPlantData', function (\Illuminate\Http\Request $request) {
     \Illuminate\Support\Facades\Storage::append('plantData-log.txt',
     "Time: " . now()->format('Y-m-d H:i:s') . ', ' .
+    "MAC: " . $request->get("mac", "n/a") . ', ' .
     "Umid Sol: " . $request->get("umid_sol", "n/a") . '%, ' .
     "Umid Atm: " . $request->get("umid_atm", "n/a") . '%, ' .
-    "Umid Sol: " . $request->get("temp", "n/a") . 'C, '
+    "Temp: " . $request->get("temp", "n/a") . 'C, '
     );
 
     $data = new PlantData();
 
-    $data->plant_id = 1;
+    $data->mac = $request->mac;
     $data->umid_sol = $request->umid_sol;
     $data->umid_atm = $request->umid_atm;
     $data->temp = $request->temp;

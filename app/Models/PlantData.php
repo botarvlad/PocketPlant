@@ -13,6 +13,7 @@ class PlantData extends Model
     use HasFactory;
 
     protected $fillable = [
+        'mac',
         'umid_sol',
         'umid_atm',
         'temp',

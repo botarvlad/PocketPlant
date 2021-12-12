@@ -6,6 +6,7 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\PlantDataController;
 use App\Http\Controllers\PlantController;
+use App\Http\Controllers\DeviceController;
 use App\Models\Plant;
 
 /*
@@ -36,8 +37,13 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     // Plants
     Route::get('/plants', [PlantController::class, 'index'])->name('plants.index');
-    Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
     Route::get('/plants/add', [PlantController::class, 'add'])->name('plants.add');
+    Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
+
+    // Devices
+    Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
+    Route::get('/devices/add', [DeviceController::class, 'add'])->name('devices.add');
+    Route::get('/devices/{plant}',[DeviceController::class, 'view'])->name('devices.view');
 });
 
 Route::get('/plantdata', [PlantDataController::class, 'get'])->name('getplantdata');

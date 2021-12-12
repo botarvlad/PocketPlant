@@ -22,6 +22,9 @@
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </jet-nav-link>
+                                <!-- <jet-nav-link :href="route('devices.index')" :active="route().current('devices.index')">
+                                    My Devices
+                                </jet-nav-link> -->
                                 <jet-nav-link :href="route('plants.index')" :active="route().current('plants.index')">
                                     My Plants
                                 </jet-nav-link>
@@ -148,6 +151,9 @@
                         <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </jet-responsive-nav-link>
+                        <!-- <jet-responsive-nav-link :href="route('devices.index')" :active="route().current('devices.index')">
+                            My Devices
+                        </jet-responsive-nav-link> -->
                         <jet-responsive-nav-link :href="route('plants.index')" :active="route().current('plants.index')">
                             My Plants
                         </jet-responsive-nav-link>

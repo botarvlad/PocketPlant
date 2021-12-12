@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlantDataTable extends Migration
+class CreateDeviceDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,12 +15,10 @@ class CreatePlantDataTable extends Migration
     {
         Schema::create('plant_data', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('plant_id')->unsigned();
+            $table->string('mac');
             $table->float('umid_sol');
             $table->float('umid_atm');
             $table->float('temp');
-
-            $table->foreign('plant_id')->references('id')->on('plants');
 
             $table->timestamps();
         });
