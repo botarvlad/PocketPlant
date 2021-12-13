@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Plant;
 use App\Models\PlantData;
+use App\Models\Device;
 
 use Inertia\Inertia;
 
@@ -23,6 +24,25 @@ class PlantController extends Controller
     }
 
     public function add() {
-        return Inertia::render('Plant/CreatePlant');
+        // dd(Device::where('user_id', auth()->user()->id)->get());
+        return Inertia::render('Plant/CreatePlant', [
+            'devices' => Device::where('user_id', auth()->user()->id)->get()
+        ]);
+    }
+
+    public function store(Request $request) {
+        
+        $plant = new Plant($request->only([
+            'name',
+            'species'
+        ]));
+        
+        $plant->user_id = auth()->user()->id;
+        $ceva = Device::where('mac_address', $request->device)->get();
+        $plant->device_id = $ceva[0]->id;
+
+        $plant->save();
+
+        return redirect()->route('plants.index');
     }
 }

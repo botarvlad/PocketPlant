@@ -38,3 +38,10 @@ Route::post('/postPlantData', function (\Illuminate\Http\Request $request) {
 
     $data->save();
 });
+
+Route::get('/getPlantData', function (\Illuminate\Http\Request $request) {
+
+    $data = DB::table('plant_data')->orderBy('created_at', 'desc')->first();
+
+    return $data->umid_sol;
+});
