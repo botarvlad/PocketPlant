@@ -25,12 +25,23 @@ class DeviceController extends Controller
 
     public function add() {
 
-       $device_request = DB::table('plant_data')->latest('created_at')->first();
+    //    $device_request = DB::table('plant_data')->latest('created_at')->first();
 
-       $new_device = DB::table('devices_list')->where('mac_address', $device_request->mac)->get();
+    //    $new_device = DB::table('devices_list')->where('mac_address', $device_request->mac)->get();
+
+        $new_devices = DB::table('devices_list')
+            ->join('plant_data', function ($join) {
+                $join->on('devices_list.mac_address', '=', 'plant_data.mac')
+                     ->where('devices_list.claimed', '=', 0);
+            })
+            ->get();
+        
+        // $new_devices = DB::table('devices_list')
+        //     ->join('plant_data', 'devices_list.mac_address', '=', 'plant_data.mac')
+        //     ->get();
 
         return Inertia::render('Device/RegisterDevice', [
-            'new_devices' => $new_device
+            'new_devices' => $new_devices
         ]);
     }
 
