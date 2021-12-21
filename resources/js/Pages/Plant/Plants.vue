@@ -29,6 +29,9 @@
 </template>
 
 <script>
+// ! Aici sa ai plantele aranjate pe camerele din casa: Ex bucatarie, living, dormitor, baie, etc
+// !  Fiecare camera cu plantele ei.
+
 import { defineComponent } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import Plant from '../Plant/Plant.vue'

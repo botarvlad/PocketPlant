@@ -12,6 +12,12 @@ class Plant extends Model
 {
     use HasFactory;
 
+    /**
+    A plant has: 
+        standing place (i.e. Office, bedroom, livingroom,...),
+        
+     */
+
     protected $fillable = [
         'name',
         'species',

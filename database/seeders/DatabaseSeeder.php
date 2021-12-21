@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use Database\Seeders\DevicesTableSeeder;
+use Database\Seeders\PlantDataSeeder;
+use Database\Seeders\PlantSeeder;
 use Database\Seeders\UsersTableSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +21,9 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $seeds = [
             DevicesTableSeeder::class,
-            UsersTableSeeder::class
+            UsersTableSeeder::class,
+            PlantSeeder::class,
+            PlantDataSeeder::class,
         ];
 
         $this->call($seeds);

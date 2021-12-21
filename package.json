@@ -26,8 +26,12 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "@anivive/vue3-form-wizard": "^1.0.1",
+        "@headlessui/vue": "^1.4.2",
+        "@heroicons/vue": "^1.0.5",
         "@tailwindcss/aspect-ratio": "^0.4.0",
         "browser-sync": "^2.27.7",
-        "browser-sync-webpack-plugin": "^2.3.0"
+        "browser-sync-webpack-plugin": "^2.3.0",
+        "vue-form-wizard": "^0.8.4"
     }
 }

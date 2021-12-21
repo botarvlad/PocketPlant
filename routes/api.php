@@ -20,14 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/postMacAddr', function (\Illuminate\Http\Request $request) {
+    
+    // dd($request); store the request somewhere...
+
+
+});
+
 Route::post('/postPlantData', function (\Illuminate\Http\Request $request) {
-    \Illuminate\Support\Facades\Storage::append('plantData-log.txt',
-    "Time: " . now()->format('Y-m-d H:i:s') . ', ' .
-    "MAC: " . $request->get("mac", "n/a") . ', ' .
-    "Umid Sol: " . $request->get("umid_sol", "n/a") . '%, ' .
-    "Umid Atm: " . $request->get("umid_atm", "n/a") . '%, ' .
-    "Temp: " . $request->get("temp", "n/a") . 'C, '
-    );
 
     $data = new PlantData();
 

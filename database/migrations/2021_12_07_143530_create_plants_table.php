@@ -16,12 +16,17 @@ class CreatePlantsTable extends Migration
         Schema::create('plants', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->bigInteger('device_id')->unsigned()->nullable();
+            // $table->string('room');
             $table->string('name');
             $table->string('species');
+            $table->string('pot_type')->nullable();
+            $table->float('pot_size', 8, 2 )->nullable();
+            $table->string('soil_type')->nullable();
+            $table->float('height', 8, 2)->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('room_id')->references('id')->on('rooms');
 
             $table->timestamps();
         });
