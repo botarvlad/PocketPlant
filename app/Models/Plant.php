@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 use App\Models\PlantData;
+use App\Models\Device;
 
 class Plant extends Model
 {
@@ -26,6 +27,10 @@ class Plant extends Model
 
     public function plantDatas() {
         return $this->hasMany(PlantData::class);
+    }
+
+    public function devices() {
+        return $this->hasOne(Device::class);
     }
 
     public function user() {

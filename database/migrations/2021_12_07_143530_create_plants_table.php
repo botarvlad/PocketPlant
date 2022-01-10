@@ -24,6 +24,7 @@ class CreatePlantsTable extends Migration
             $table->string('soil_type')->nullable();
             $table->float('height', 8, 2)->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            //restul de date care vor fi luate din tabela cu nevoi esentiale 
 
             $table->foreign('user_id')->references('id')->on('users');
             // $table->foreign('room_id')->references('id')->on('rooms');

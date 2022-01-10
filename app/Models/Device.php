@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 use App\Models\PlantData;
+use App\Models\Plant;
 
 class Device extends Model
 {
@@ -18,12 +19,16 @@ class Device extends Model
         'mac_address',
     ];
 
-    public function plants() {
-        return $this->hasMany(Plant::class);
-    }
+    // public function plants() {
+    //     return $this->hasMany(Plant::class);
+    // }
 
     public function plantDatas() {
         return $this->hasMany(PlantData::class);
+    }
+
+    public function plants() {
+        return $this->belongsTo(Plant::class);
     }
 
     public function user() {

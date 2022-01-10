@@ -28,4 +28,8 @@ class PlantData extends Model
     public function plant() {
         return $this->belongsTo(Plant::class);
     }
+
+    public function device() {
+        return $this->belongsTo(Device::class);
+    }
 }

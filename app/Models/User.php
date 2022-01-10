@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Plant;
+use App\Models\Device;
 
 class User extends Authenticatable
 {
@@ -63,5 +64,9 @@ class User extends Authenticatable
 
     public function plants() {
         return $this->hasMany(Plant::class);
+    }
+
+    public function devices() {
+        return $this->hasMany(Device::class);
     }
 }
