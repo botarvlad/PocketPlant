@@ -16,7 +16,7 @@ class CreateDevicesTable extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('mac_address');
+            $table->string('mac_address')->unique();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
