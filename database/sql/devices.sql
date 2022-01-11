@@ -1,4 +1,2 @@
-INSERT INTO `devices_list` (`mac_address`, `claimed`, `created_at`, `updated_at`) VALUES 
-    ('BC:DD:C2:08:D4:5A', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('BC:FG:98:08:D4:5A', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('BC:FG:98:08:JU:9P', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `devices` (`user_id`, `mac_address`, `created_at`, `updated_at`) VALUES 
+    (1,'BC:DD:C2:08:D4:5A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

@@ -8,6 +8,7 @@ use Database\Seeders\DevicesTableSeeder;
 use Database\Seeders\PlantDataSeeder;
 use Database\Seeders\PlantSeeder;
 use Database\Seeders\UsersTableSeeder;
+use Database\Seeders\DevicesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $seeds = [
             DevicesTableSeeder::class,
             UsersTableSeeder::class,
+            DevicesSeeder::class,
             PlantSeeder::class,
             PlantDataSeeder::class,
         ];

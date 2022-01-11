@@ -16,13 +16,13 @@ class CreateDeviceDataTable extends Migration
         Schema::create('plant_data', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('plant_id')->unsigned();
-            $table->string('mac');
+            $table->bigInteger('device_id')->unsigned();
             $table->float('umid_sol');
             $table->float('umid_atm');
             $table->float('temp');
 
             $table->foreign('plant_id')->references('id')->on('plants');
-            $table->foreign('mac')->references('mac_address')->on('devices');
+            $table->foreign('device_id')->references('id')->on('devices');
 
             $table->timestamps();
         });
