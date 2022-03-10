@@ -24,10 +24,10 @@ class Device extends Model
     // }
 
     public function plantDatas() {
-        return $this->hasMany(PlantData::class);
+        return $this->hasMany(PlantData::class, 'mac', 'mac_address');
     }
 
-    public function plants() {
+    public function plant() {
         return $this->belongsTo(Plant::class);
     }
 

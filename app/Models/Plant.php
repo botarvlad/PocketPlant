@@ -29,11 +29,16 @@ class Plant extends Model
         return $this->hasMany(PlantData::class);
     }
 
-    public function devices() {
+    public function device() {
         return $this->hasOne(Device::class);
     }
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    // Atributes
+    public function currentDevice () {
+
     }
 }

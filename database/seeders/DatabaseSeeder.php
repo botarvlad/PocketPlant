@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $seeds = [
             DevicesTableSeeder::class,
+            PlantsCareSeeder::class,
             UsersTableSeeder::class,
-            DevicesSeeder::class,
             PlantSeeder::class,
+            DevicesSeeder::class,
             PlantDataSeeder::class,
         ];
 

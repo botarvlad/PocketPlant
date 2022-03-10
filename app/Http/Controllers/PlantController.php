@@ -7,6 +7,7 @@ use App\Models\Plant;
 use App\Models\PlantData;
 use App\Models\Device;
 
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PlantController extends Controller
@@ -18,15 +19,21 @@ class PlantController extends Controller
     }
 
     public function view(Plant $plant) {
+        $plant_stats = []; 
+        
         return Inertia::render('Plant/PlantDetails', [
-            'plant_datas' => PlantData::where('plant_id', $plant->id)->get()
+            'plant_datas' => PlantData::where('plant_id', $plant->id)->get(),
+            'plant_care' => DB::table('plants_care')->where('name', $plant->species)->first(),
+            'device_attached' => $plant->device,
+            'plant' => $plant
         ]);
     }
 
     public function add() {
         // dd(Device::where('user_id', auth()->user()->id)->get());
         return Inertia::render('Plant/CreatePlant', [
-            'devices' => Device::where('user_id', auth()->user()->id)->get()
+            'devices' => Device::where('user_id', auth()->user()->id)->get(),
+            'plants' => DB::table('plants_care')->get()
         ]);
     }
 
@@ -38,8 +45,8 @@ class PlantController extends Controller
         ]));
         
         $plant->user_id = auth()->user()->id;
-        $ceva = Device::where('mac_address', $request->device)->get();
-        $plant->device_id = $ceva[0]->id;
+        // $ceva = Device::where('mac_address', $request->device)->get();
+        // $plant->device_id = $ceva[0]->id;
 
         $plant->save();
 
