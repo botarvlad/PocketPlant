@@ -15,7 +15,7 @@ class CreateDeviceDataTable extends Migration
     {
         Schema::create('plant_data', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('plant_id')->unsigned();
+            $table->bigInteger('plant_id')->unsigned()->nullable();
             $table->string('mac');
             $table->float('umid_sol');
             $table->float('umid_atm');

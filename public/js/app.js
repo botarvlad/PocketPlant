@@ -20985,12 +20985,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ["plant_datas", "plant_care", "device_attached", "plant"]
+  props: ["plant_datas", "plant_care", "device_attached", "plant"],
+  data: function data() {
+    return {};
+  },
+  computed: {
+    mapped_humidity: function mapped_humidity() {
+      var last_val = this.plant_datas[this.plant_datas.length - 1];
+      var last_humidity_val = last_val.umid_sol;
+      if (last_humidity_val >= 0 && last_humidity_val < 45) return "dry";else if (last_humidity_val >= 45 && last_humidity_val < 75) return "moist";else if (last_humidity_val >= 75 && last_humidity_val <= 100) return "wet";
+    },
+    humidity_health: function humidity_health() {
+      return this.mapped_humidity === this.plant_care.water ? "Good" : "Bad :(((((";
+    }
+  }
 });
 
 /***/ }),
@@ -25826,7 +25842,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant.name), 1
       /* TEXT */
-      )])])])])];
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Soil moist: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.humidity_health), 1
+      /* TEXT */
+      )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        onClick: _cache[0] || (_cache[0] = function () {
+          return _ctx.send && _ctx.send.apply(_ctx, arguments);
+        }),
+        "class": "rounded-md bg-gray-700"
+      }, "Click")];
     }),
     _: 1
     /* STABLE */

@@ -28,13 +28,20 @@ Route::post('/postMacAddr', function (\Illuminate\Http\Request $request) {
 });
 
 Route::post('/postPlantData', function (\Illuminate\Http\Request $request) {
-
+    // \Illuminate\Support\Facades\Storage::append("arduino-log.txt",
+    // "Time: " . now()->format("Y-m-d H:i:s") . ", " .
+    // "asdadasd: " . $request->get("umid_sol", "n/a") . '%. ');
     $data = new PlantData();
+    // $data->plant_id = 1;
 
-    $data->mac = $request->mac;
-    $data->umid_sol = $request->umid_sol;
-    $data->umid_atm = $request->umid_atm;
-    $data->temp = $request->temp;
+    $data->mac = $request->get("mac");
+    $data->umid_sol = $request->get("umid_sol");
+    $data->umid_atm = $request->get("umid_atm");
+    $data->temp = $request->get("temp");
+
+    \Illuminate\Support\Facades\Storage::append("arduino-log.txt",
+    "Time: " . now()->format("Y-m-d H:i:s") . ", " .
+    "plant_data: " . $data);
 
     $data->save();
 });
