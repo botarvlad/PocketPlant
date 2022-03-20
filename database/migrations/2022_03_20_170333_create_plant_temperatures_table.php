@@ -15,7 +15,13 @@ class CreatePlantTemperaturesTable extends Migration
     {
         Schema::create('plant_temperatures', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('plant_id')->unsigned()->nullable();
+            $table->float('temp');
+            
+            $table->foreign('plant_id')->references('id')->on('plants');
+
             $table->timestamps();
+
         });
     }
 

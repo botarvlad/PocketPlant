@@ -6,6 +6,9 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\DevicesTableSeeder;
 use Database\Seeders\PlantDataSeeder;
+use Database\Seeders\PlantAirHumiditySeeder;
+use Database\Seeders\PlantSoilMoistureSeeder;
+use Database\Seeders\PlantTemperatureSeeder;
 use Database\Seeders\PlantSeeder;
 use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\DevicesSeeder;
@@ -27,6 +30,9 @@ class DatabaseSeeder extends Seeder
             PlantSeeder::class,
             DevicesSeeder::class,
             PlantDataSeeder::class,
+            PlantTemperatureSeeder::class,
+            PlantSoilMoistureSeeder::class,
+            PlantAirHumiditySeeder::class,
         ];
 
         $this->call($seeds);
