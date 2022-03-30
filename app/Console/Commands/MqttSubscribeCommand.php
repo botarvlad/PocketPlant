@@ -49,6 +49,8 @@ class MqttSubscribeCommand extends Command
         $port     = 1883;
         $clientId = 'pocket_plant_subscriber';
 
+        $received_umid_sol = 100;
+
         $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
         
         //? Create and configure the connection settings as required.
@@ -61,28 +63,35 @@ class MqttSubscribeCommand extends Command
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
             $plantTemperature = new PlantTemperature;
             $plantTemperature->temp = $message;
-            echo $plantTemperature;
             $plantTemperature->save();
         }, 1);
 
-        $mqtt->subscribe('home/boti/plant/umid_sol', function ($topic, $message) {
+        $mqtt->subscribe('home/boti/plant/umid_sol', function ($topic, $message) use ($received_umid_sol, $mqtt){
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
-            $plantAirHumidity = new PlantAirHumidity;
-            $plantAirHumidity->umid_atm = $message;
-            echo $plantAirHumidity;
-            $plantAirHumidity->save();
+            $received_umid_sol = $message;
+            $this->pub($mqtt, $received_umid_sol);
+            echo sprintf("Umiditatea in sol este: %s\n", $received_umid_sol);
+            $plantSoilMoisture = new PlantSoilMoisture;
+            $plantSoilMoisture->umid_sol = $message;
+            $plantSoilMoisture->save();
         }, 1);
 
         $mqtt->subscribe('home/boti/plant/umid_atm', function ($topic, $message) {
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
-            $plantSoilMoisture = new PlantSoilMoisture;
-            $plantSoilMoisture->umid_sol = $message;
-            echo $plantSoilMoisture;
-            $plantSoilMoisture->save();
+            $plantAirHumidity = new PlantAirHumidity;
+            $plantAirHumidity->umid_atm = $message;
+            $plantAirHumidity->save();
         }, 1);
         
         $mqtt->loop(true);
         $mqtt->disconnect();
         // return Command::SUCCESS;
+    }
+
+    function pub($m, $value) {
+        echo $value;
+        if ($value < 30) {
+            $m->publish("home/boti/actions/run_pump", "on", 0);
+        }
     }
 }
