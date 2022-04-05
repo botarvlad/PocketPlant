@@ -43,10 +43,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
 
     // Devices
+    Route::patch('/devices/switch_plant',[DeviceController::class, 'switch_plant'])->name('devices.switch_plant');
     Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
     Route::get('/devices/add', [DeviceController::class, 'add'])->name('devices.add');
-    // Route::get('/devices/{device}',[DeviceController::class, 'view'])->name('devices.view');
+    Route::get('/devices/{device}',[DeviceController::class, 'view'])->name('devices.view');
     Route::patch('/devices/{device}',[DeviceController::class, 'claim'])->name('devices.claim');
 });
-
-Route::get('/plantdata', [PlantDataController::class, 'get'])->name('getplantdata');

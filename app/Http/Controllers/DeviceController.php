@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Device;
 use App\Models\PlantData;
+use App\Models\Plant;
 use DB;
 
 use Inertia\Inertia;
@@ -19,7 +20,9 @@ class DeviceController extends Controller
 
     public function view(Device $device) {
         return Inertia::render('Device/DeviceDetails', [
-            'device' => Device::where('user_id', auth()->user()->id)->get()
+            'device' => $device,
+            'plant_host' => Plant::where('id', $device->plant_id)->first(),
+            'plants' => Plant::where('user_id', auth()->user()->id)->get()
         ]);
     }
 
@@ -43,6 +46,16 @@ class DeviceController extends Controller
         return Inertia::render('Device/RegisterDevice', [
             'new_devices' => $new_devices
         ]);
+    }
+
+    public function switch_plant(Request $request) {
+        $device = Device::find($request->device_id)->get();
+        
+        $device[0]->plant_id = $request->plant_host['id'];
+
+        $device[0]->save();
+
+        return redirect()->back();
     }
 
     public function claim($mac) {
