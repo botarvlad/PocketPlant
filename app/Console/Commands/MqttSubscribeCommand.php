@@ -104,14 +104,34 @@ class MqttSubscribeCommand extends Command
 
         // iei trash_holdul pentru umiditatea ideala a plantei respective
         echo sprintf("Specia plantei este: %s\n", $plant[0]->species);
-        $ideal_value = DB::table('plants_care')->where('name', $plant[0]->species)->value('water'); 
-        echo sprintf("Ideal Value este: %s\n", $ideal_value);
+        $ideal_soil = DB::table('plants_care')->where('name', $plant[0]->species)->value('water'); 
+        echo sprintf("Ideal Value este: %s\n", $ideal_soil);
         //! Nu ii buna valoarea (este 'dry') Trebe mapare...
-        
-        $ideal_value = 40; //! Atribuire Temporara
+        $min_ideal_value = 0;
+
+        switch ($ideal_soil) {
+            case 'dry':
+                echo 'dry';
+                $min_ideal_value = 20;
+                break;
+                
+            case 'dry-ish or moist':
+                echo 'dry-ish';
+                $min_ideal_value = 35;
+                break;
+
+            case 'moist':
+                echo 'moist';
+                $min_ideal_value = 45;
+                break;    
+            
+            default:
+                # code...
+                break;
+        }
         
         // compari cele 2 variabile de pana acum (current_umid < trash_hold)
-        if ($current_umid < $ideal_value) {
+        if ($current_umid < $min_ideal_value) {
             $this->pub($m);
         } else {
             return;
