@@ -12,6 +12,7 @@ use Database\Seeders\PlantTemperatureSeeder;
 use Database\Seeders\PlantSeeder;
 use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\DevicesSeeder;
+use Database\Seeders\WaterTimesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             PlantTemperatureSeeder::class,
             PlantSoilMoistureSeeder::class,
             PlantAirHumiditySeeder::class,
+            WaterTimesSeeder::class
         ];
 
         $this->call($seeds);

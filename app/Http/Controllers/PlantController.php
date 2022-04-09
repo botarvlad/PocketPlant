@@ -20,6 +20,11 @@ class PlantController extends Controller
 
     public function view(Plant $plant) {
         $plant_stats = []; 
+
+        // ia ultimul record din watered_plants al plantei
+        $last_time_watered = DB::table('water_times')->where('plant_id', $plant->id)->where(function ($query) {
+            $query->order_by('created_at', 'desc')->limit(1);
+        });
         
         return Inertia::render('Plant/PlantDetails', [
             'plant_datas' => PlantData::where('plant_id', $plant->id)->get(),

@@ -10,8 +10,14 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-                        <h1>{{ plant.name }}</h1>
+                        <h1 class="text-xl">
+                            Plant Name:
+                            <span class="text-base"> {{ plant.name }} </span>
+                        </h1>
                         <p>Soil moist: {{ humidity_health }}</p>
+                        <p>
+                            Device attached: {{ device_attached.mac_address }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -22,7 +28,6 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import axios from "axios";
 
 export default {
     components: {
