@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Plant;
 use App\Models\PlantData;
+use App\Models\PlantAirHumidity;
+use App\Models\PlantSoilMoisture;
+use App\Models\PlantTemperature;
 use App\Models\Device;
 
 use Illuminate\Support\Facades\DB;
@@ -20,13 +23,22 @@ class PlantController extends Controller
 
     public function view(Plant $plant) {
         $plant_stats = []; 
+        $plant_datas = [];
+
+        $plant_soil_records = PlantSoilMoisture::where('plant_id', $plant->id)->get()->toArray();
+        $plant_temp_records = PlantTemperature::where('plant_id', $plant->id)->get()->toArray();
+        $plant_air_records = PlantAirHumidity::where('plant_id', $plant->id)->get()->toArray();
+
+        $plant_datas['plant_soil_records'] = $plant_soil_records;
+        $plant_datas['plant_temp_records'] = $plant_temp_records;
+        $plant_datas['plant_air_records'] = $plant_air_records;
 
         // ia ultimul record din watered_plants al plantei
         $last_time_watered = DB::table('water_times')->where('plant_id', $plant->id)->latest()->first();
         $plant_stats['last_time_watered'] = $last_time_watered;
         
         return Inertia::render('Plant/PlantDetails', [
-            'plant_datas' => PlantData::where('plant_id', $plant->id)->get(),
+            'plant_datas' => $plant_datas,
             'plant_care' => DB::table('plants_care')->where('name', $plant->species)->first(),
             'device_attached' => $plant->device,
             'plant' => $plant,

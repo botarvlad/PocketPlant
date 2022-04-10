@@ -21048,16 +21048,30 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     mapped_humidity: function mapped_humidity() {
-      var last_val = this.plant_datas[this.plant_datas.length - 1];
+      var last_val = this.plant_datas["plant_soil_records"][this.plant_datas["plant_soil_records"].length - 1];
       var last_humidity_val = last_val.umid_sol;
-      if (last_humidity_val >= 0 && last_humidity_val < 72) return "dry";else if (last_humidity_val >= 72 && last_humidity_val < 88) return "moist";else if (last_humidity_val >= 88 && last_humidity_val <= 100) return "wet";
+      if (last_humidity_val >= 0 && last_humidity_val < 72) return {
+        soil: "dry",
+        value: last_humidity_val
+      };else if (last_humidity_val >= 72 && last_humidity_val < 88) return {
+        soil: "moist",
+        value: last_humidity_val
+      };else if (last_humidity_val >= 88 && last_humidity_val <= 100) return {
+        soil: "wet",
+        value: last_humidity_val
+      };
     },
     humidity_health: function humidity_health() {
+      var qwerty = this.convertSoilToValue(this.plant_care.water);
+
       if (this.mapped_humidity) {
-        return this.mapped_humidity === this.plant_care.water ? "Good" : "Bad :(((((";
-      } else {
-        return "Device not in soil or some error";
+        return this.mapped_humidity.soil === this.plant_care.water ? "Good" : this.mapped_humidity.value < qwerty[0] ? "Too less water" : "Too much water";
       }
+    }
+  },
+  methods: {
+    convertSoilToValue: function convertSoilToValue(soil_type) {
+      if (soil_type === "dry") return [0, 72];else if (soil_type === "moist") return [73, 88];else if (soil_type === "wet") return [89, 100];
     }
   }
 });
@@ -26017,7 +26031,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant.name), 1
       /* TEXT */
-      )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Soil moist: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.humidity_health), 1
+      )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "Plant Species: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant.species), 1
+      /* TEXT */
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Soil moist: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.humidity_health), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({

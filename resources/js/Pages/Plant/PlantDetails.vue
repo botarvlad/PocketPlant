@@ -14,6 +14,7 @@
                             Plant Name:
                             <span class="text-base"> {{ plant.name }} </span>
                         </h1>
+                        <h2>Plant Species: {{ plant.species }}</h2>
                         <p>Soil moist: {{ humidity_health }}</p>
                         <p :class="{ 'text-red-600': !device_attached }">
                             Device attached:
@@ -56,22 +57,34 @@ export default {
     },
     computed: {
         mapped_humidity() {
-            let last_val = this.plant_datas[this.plant_datas.length - 1];
+            let last_val =
+                this.plant_datas["plant_soil_records"][
+                    this.plant_datas["plant_soil_records"].length - 1
+                ];
             let last_humidity_val = last_val.umid_sol;
-            if (last_humidity_val >= 0 && last_humidity_val < 72) return "dry";
+            if (last_humidity_val >= 0 && last_humidity_val < 72)
+                return { soil: "dry", value: last_humidity_val };
             else if (last_humidity_val >= 72 && last_humidity_val < 88)
-                return "moist";
+                return { soil: "moist", value: last_humidity_val };
             else if (last_humidity_val >= 88 && last_humidity_val <= 100)
-                return "wet";
+                return { soil: "wet", value: last_humidity_val };
         },
         humidity_health() {
+            const qwerty = this.convertSoilToValue(this.plant_care.water);
             if (this.mapped_humidity) {
-                return this.mapped_humidity === this.plant_care.water
+                return this.mapped_humidity.soil === this.plant_care.water
                     ? "Good"
-                    : "Bad :(((((";
-            } else {
-                return "Device not in soil or some error";
+                    : this.mapped_humidity.value < qwerty[0]
+                    ? "Too less water"
+                    : "Too much water";
             }
+        },
+    },
+    methods: {
+        convertSoilToValue(soil_type) {
+            if (soil_type === "dry") return [0, 72];
+            else if (soil_type === "moist") return [73, 88];
+            else if (soil_type === "wet") return [89, 100];
         },
     },
 };
