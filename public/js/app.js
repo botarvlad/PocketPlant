@@ -21037,6 +21037,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -21049,23 +21051,30 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     mapped_humidity: function mapped_humidity() {
       var last_val = this.plant_datas["plant_soil_records"][this.plant_datas["plant_soil_records"].length - 1];
-      var last_humidity_val = last_val.umid_sol;
-      if (last_humidity_val >= 0 && last_humidity_val < 72) return {
-        soil: "dry",
-        value: last_humidity_val
-      };else if (last_humidity_val >= 72 && last_humidity_val < 88) return {
-        soil: "moist",
-        value: last_humidity_val
-      };else if (last_humidity_val >= 88 && last_humidity_val <= 100) return {
-        soil: "wet",
-        value: last_humidity_val
-      };
+
+      if (last_val) {
+        var last_humidity_val = last_val.umid_sol;
+        if (last_humidity_val >= 0 && last_humidity_val < 72) return {
+          soil: "dry",
+          value: last_humidity_val
+        };else if (last_humidity_val >= 72 && last_humidity_val < 88) return {
+          soil: "moist",
+          value: last_humidity_val
+        };else if (last_humidity_val >= 88 && last_humidity_val <= 100) return {
+          soil: "wet",
+          value: last_humidity_val
+        };
+      } else {
+        return "No data yet!";
+      }
     },
     humidity_health: function humidity_health() {
       var qwerty = this.convertSoilToValue(this.plant_care.water);
 
-      if (this.mapped_humidity) {
+      if (_typeof(this.mapped_humidity) === "object") {
         return this.mapped_humidity.soil === this.plant_care.water ? "Good" : this.mapped_humidity.value < qwerty[0] ? "Too less water" : "Too much water";
+      } else {
+        return "No data yet!";
       }
     }
   },
@@ -26041,7 +26050,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         })
       }, " Device attached: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.device_attached ? $props.device_attached.mac_address : "Nici un device atasat"), 3
       /* TEXT, CLASS */
-      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, " Last time watered: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant_stats.last_time_watered.created_at), 1
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, " Last time watered: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant_stats.last_time_watered ? $props.plant_stats.last_time_watered.created_at : "No data yet"), 1
       /* TEXT */
       )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         onClick: _cache[0] || (_cache[0] = function () {

@@ -26,7 +26,11 @@
                         </p>
                         <div>
                             Last time watered:
-                            {{ plant_stats.last_time_watered.created_at }}
+                            {{
+                                plant_stats.last_time_watered
+                                    ? plant_stats.last_time_watered.created_at
+                                    : "No data yet"
+                            }}
                         </div>
                     </div>
                 </div>
@@ -61,22 +65,28 @@ export default {
                 this.plant_datas["plant_soil_records"][
                     this.plant_datas["plant_soil_records"].length - 1
                 ];
-            let last_humidity_val = last_val.umid_sol;
-            if (last_humidity_val >= 0 && last_humidity_val < 72)
-                return { soil: "dry", value: last_humidity_val };
-            else if (last_humidity_val >= 72 && last_humidity_val < 88)
-                return { soil: "moist", value: last_humidity_val };
-            else if (last_humidity_val >= 88 && last_humidity_val <= 100)
-                return { soil: "wet", value: last_humidity_val };
+            if (last_val) {
+                let last_humidity_val = last_val.umid_sol;
+                if (last_humidity_val >= 0 && last_humidity_val < 72)
+                    return { soil: "dry", value: last_humidity_val };
+                else if (last_humidity_val >= 72 && last_humidity_val < 88)
+                    return { soil: "moist", value: last_humidity_val };
+                else if (last_humidity_val >= 88 && last_humidity_val <= 100)
+                    return { soil: "wet", value: last_humidity_val };
+            } else {
+                return "No data yet!";
+            }
         },
         humidity_health() {
             const qwerty = this.convertSoilToValue(this.plant_care.water);
-            if (this.mapped_humidity) {
+            if (typeof this.mapped_humidity === "object") {
                 return this.mapped_humidity.soil === this.plant_care.water
                     ? "Good"
                     : this.mapped_humidity.value < qwerty[0]
                     ? "Too less water"
                     : "Too much water";
+            } else {
+                return "No data yet!";
             }
         },
     },
