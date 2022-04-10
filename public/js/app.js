@@ -21042,7 +21042,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ["plant_datas", "plant_care", "device_attached", "plant"],
+  props: ["plant_datas", "plant_care", "device_attached", "plant", "plant_stats"],
   data: function data() {
     return {};
   },
@@ -21050,10 +21050,14 @@ __webpack_require__.r(__webpack_exports__);
     mapped_humidity: function mapped_humidity() {
       var last_val = this.plant_datas[this.plant_datas.length - 1];
       var last_humidity_val = last_val.umid_sol;
-      if (last_humidity_val >= 0 && last_humidity_val < 45) return "dry";else if (last_humidity_val >= 45 && last_humidity_val < 75) return "moist";else if (last_humidity_val >= 75 && last_humidity_val <= 100) return "wet";
+      if (last_humidity_val >= 0 && last_humidity_val < 72) return "dry";else if (last_humidity_val >= 72 && last_humidity_val < 88) return "moist";else if (last_humidity_val >= 88 && last_humidity_val <= 100) return "wet";
     },
     humidity_health: function humidity_health() {
-      return this.mapped_humidity === this.plant_care.water ? "Good" : "Bad :(((((";
+      if (this.mapped_humidity) {
+        return this.mapped_humidity === this.plant_care.water ? "Good" : "Bad :(((((";
+      } else {
+        return "Device not in soil or some error";
+      }
     }
   }
 });
@@ -26015,7 +26019,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* TEXT */
       )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Soil moist: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.humidity_health), 1
       /* TEXT */
-      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, " Device attached: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.device_attached.mac_address), 1
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+          'text-red-600': !$props.device_attached
+        })
+      }, " Device attached: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.device_attached ? $props.device_attached.mac_address : "Nici un device atasat"), 3
+      /* TEXT, CLASS */
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, " Last time watered: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant_stats.last_time_watered.created_at), 1
       /* TEXT */
       )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         onClick: _cache[0] || (_cache[0] = function () {

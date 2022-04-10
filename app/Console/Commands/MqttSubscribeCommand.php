@@ -66,17 +66,24 @@ class MqttSubscribeCommand extends Command
         $mqtt->subscribe('home/boti/plant/temp', function ($topic, $message) {
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
             $plantTemperature = new PlantTemperature;
-            $plantTemperature->temp = $message;
+            $plantTemperature->temp = $umid_sol;
             $plantTemperature->save();
         }, 1);
 
         $mqtt->subscribe('home/boti/plant/umid_sol', function ($topic, $message) use ( $mqtt) {
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
+            $plantSoilMoisture = new PlantSoilMoisture;
+            $decoded_message = json_decode($message);
+            $device = Device::where('mac_address', $decoded_message->mac)->first();
+            $plant_id = $device->plant->id;
+            $plantSoilMoisture->plant_id = $plant_id;
+            $umid_sol = $decoded_message->umid_sol;
+            $plantSoilMoisture->umid_sol = $umid_sol;
+            //echo 'INAINTE DE SAVE';
+            $plantSoilMoisture->save();
             $this->checkDevicePlant($message, $mqtt);
             echo sprintf("Umiditatea in sol este: %s\n", $received_umid_sol);
-            $plantSoilMoisture = new PlantSoilMoisture;
-            $plantSoilMoisture->umid_sol = $message;
-            $plantSoilMoisture->save();
+            
         }, 1);
 
         $mqtt->subscribe('home/boti/plant/umid_atm', function ($topic, $message) {
@@ -98,31 +105,31 @@ class MqttSubscribeCommand extends Command
         
         // verifici in ce planta sta device-ul
         $device = Device::where('mac_address', $device_mac)->get();
-        echo sprintf("Plant Id al device-ului este: %s\n", $device[0]->plant_id);
+        //echo sprintf("Plant Id al device-ului este: %s\n", $device[0]->plant_id);
         $plant = Plant::where('id', $device[0]->plant_id)->get();
-        echo sprintf("Planta in care sta device-ul este: %s\n", $plant);
+        //echo sprintf("Planta in care sta device-ul este: %s\n", $plant);
 
         // iei trash_holdul pentru umiditatea ideala a plantei respective
-        echo sprintf("Specia plantei este: %s\n", $plant[0]->species);
+        //echo sprintf("Specia plantei este: %s\n", $plant[0]->species);
         $ideal_soil = DB::table('plants_care')->where('name', $plant[0]->species)->value('water'); 
-        echo sprintf("Ideal Value este: %s\n", $ideal_soil);
+        //echo sprintf("Ideal Value este: %s\n", $ideal_soil);
         
         
         $min_ideal_value = 0;
         // mapare umiditate
         switch ($ideal_soil) {
             case 'dry':
-                echo 'dry';
+                //echo 'dry';
                 $min_ideal_value = 60;
                 break;
                 
             case 'dry-ish or moist':
-                echo 'dry-ish';
+                //echo 'dry-ish';
                 $min_ideal_value = 65;
                 break;
 
             case 'moist':
-                echo 'moist';
+                //echo 'moist';
                 $min_ideal_value = 72;
                 break;    
             
@@ -133,15 +140,19 @@ class MqttSubscribeCommand extends Command
         
         // compari cele 2 variabile de pana acum (current_umid < treshold)
         if ($current_umid < $min_ideal_value) {
-            $this->pub($m);
+            $this->pub($m, $plant[0]->id);
         } else {
             return;
         }
     }
 
-    function pub($m) {
-        $m->publish("home/boti/actions/run_pump", "on", 0);
+    function pub($m, $plant_id) {
+        DB::table('water_times')->insert([
+            'plant_id' => $plant_id,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
-        
+        $m->publish("home/boti/actions/run_pump", "on", 0);
     }
 }

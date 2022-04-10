@@ -15,9 +15,18 @@
                             <span class="text-base"> {{ plant.name }} </span>
                         </h1>
                         <p>Soil moist: {{ humidity_health }}</p>
-                        <p>
-                            Device attached: {{ device_attached.mac_address }}
+                        <p :class="{ 'text-red-600': !device_attached }">
+                            Device attached:
+                            {{
+                                device_attached
+                                    ? device_attached.mac_address
+                                    : "Nici un device atasat"
+                            }}
                         </p>
+                        <div>
+                            Last time watered:
+                            {{ plant_stats.last_time_watered.created_at }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,7 +43,13 @@ export default {
         AppLayout,
     },
 
-    props: ["plant_datas", "plant_care", "device_attached", "plant"],
+    props: [
+        "plant_datas",
+        "plant_care",
+        "device_attached",
+        "plant",
+        "plant_stats",
+    ],
 
     data() {
         return {};
@@ -43,19 +58,23 @@ export default {
         mapped_humidity() {
             let last_val = this.plant_datas[this.plant_datas.length - 1];
             let last_humidity_val = last_val.umid_sol;
-            if (last_humidity_val >= 0 && last_humidity_val < 45) return "dry";
-            else if (last_humidity_val >= 45 && last_humidity_val < 75)
+            if (last_humidity_val >= 0 && last_humidity_val < 72) return "dry";
+            else if (last_humidity_val >= 72 && last_humidity_val < 88)
                 return "moist";
-            else if (last_humidity_val >= 75 && last_humidity_val <= 100)
+            else if (last_humidity_val >= 88 && last_humidity_val <= 100)
                 return "wet";
         },
         humidity_health() {
-            return this.mapped_humidity === this.plant_care.water
-                ? "Good"
-                : "Bad :(((((";
+            if (this.mapped_humidity) {
+                return this.mapped_humidity === this.plant_care.water
+                    ? "Good"
+                    : "Bad :(((((";
+            } else {
+                return "Device not in soil or some error";
+            }
         },
     },
 };
 </script>
 
-<style></style>
+<style scoped></style>

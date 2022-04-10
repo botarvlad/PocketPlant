@@ -22,15 +22,15 @@ class PlantController extends Controller
         $plant_stats = []; 
 
         // ia ultimul record din watered_plants al plantei
-        $last_time_watered = DB::table('water_times')->where('plant_id', $plant->id)->where(function ($query) {
-            $query->order_by('created_at', 'desc')->limit(1);
-        });
+        $last_time_watered = DB::table('water_times')->where('plant_id', $plant->id)->latest()->first();
+        $plant_stats['last_time_watered'] = $last_time_watered;
         
         return Inertia::render('Plant/PlantDetails', [
             'plant_datas' => PlantData::where('plant_id', $plant->id)->get(),
             'plant_care' => DB::table('plants_care')->where('name', $plant->species)->first(),
             'device_attached' => $plant->device,
-            'plant' => $plant
+            'plant' => $plant,
+            'plant_stats' => $plant_stats
         ]);
     }
 
