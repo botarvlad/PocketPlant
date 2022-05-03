@@ -58,9 +58,13 @@ class PlantController extends Controller
         
         $plant = new Plant($request->only([
             'name',
-            'species'
+            'species',
+            'pot_type',
+            'pot_size',
+            'soil_type',
+            'height',
         ]));
-        
+
         $plant->user_id = auth()->user()->id;
         // $ceva = Device::where('mac_address', $request->device)->get();
         // $plant->device_id = $ceva[0]->id;

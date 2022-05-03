@@ -25,7 +25,11 @@ class Plant extends Model
     protected $fillable = [
         'name',
         'species',
-        'picture'
+        'picture',
+        'pot_type',
+        'pot_size',
+        'soil_type',
+        'height',
     ];
 
     public function plantDatas() {
