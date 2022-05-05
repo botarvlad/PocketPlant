@@ -34,26 +34,8 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    $plants_datas = [];
-    $plants_soil_records = [];
-    $plants_temp_records = [];
-    $plants_air_records = [];
-
-    $user_plants = Plant::where('user_id', auth()->user()->id)->get();
-    foreach ($user_plants as $plant => $plant_value) {
-        array_push($plants_soil_records, PlantSoilMoisture::where('plant_id', $plant_value->id)->get()->toArray());
-        array_push($plants_temp_records, PlantTemperature::where('plant_id', $plant_value->id)->get()->toArray());
-        array_push($plants_air_records, PlantAirHumidity::where('plant_id', $plant_value->id)->get()->toArray());
-    }
-
-    $plants_datas['plants_soil_records'] = $plants_soil_records;
-    $plants_datas['plants_temp_records'] = $plants_temp_records;
-    $plants_datas['plants_air_records'] = $plants_air_records;
-
     return Inertia::render('Dashboard', [
-        'plants' => Plant::where('user_id', auth()->user()->id),
-        'plants_care' => DB::table('plants_care')->get(),
-        'plants_datas' => $plants_datas
+        'plants' => Plant::where('user_id', auth()->user()->id)->get(),
     ]);
 })->name('dashboard');
 

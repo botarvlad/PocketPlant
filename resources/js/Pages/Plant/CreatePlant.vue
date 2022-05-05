@@ -25,6 +25,12 @@
                                     :reduce="(plant) => plant.name"
                                     label="name"
                                 ></v-select>
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.species"
+                                >
+                                    {{ $page.props.errors.species }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 1">
                                 <h2>Tipul ghiveciului</h2>
@@ -33,6 +39,12 @@
                                     :options="pot_types"
                                     label="pot_type"
                                 ></v-select>
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.pot_type"
+                                >
+                                    {{ $page.props.errors.pot_type }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 2" class="flex flex-col">
                                 <h2>Marimea ghiveciului</h2>
@@ -47,6 +59,12 @@
                                     step="2.5"
                                     v-model="form.pot_size"
                                 />
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.pot_size"
+                                >
+                                    {{ $page.props.errors.pot_size }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 3">
                                 <h2>Tipul solului</h2>
@@ -55,6 +73,12 @@
                                     :options="soil_types"
                                     label="soil_type"
                                 ></v-select>
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.soil_type"
+                                >
+                                    {{ $page.props.errors.soil_type }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 4" class="flex flex-col">
                                 <h2>Inaltimea plantei</h2>
@@ -67,6 +91,12 @@
                                     step="5"
                                     v-model="form.height"
                                 />
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.height"
+                                >
+                                    {{ $page.props.errors.height }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 5">
                                 <h2>Adauga o poza cu planta (skippable)</h2>
@@ -74,6 +104,12 @@
                             <div v-if="formPosition == 6">
                                 <h2>Numele plantei</h2>
                                 <input type="text" v-model="form.name" />
+                                <div
+                                    class="text-red-500"
+                                    v-if="$page.props.errors.name"
+                                >
+                                    {{ $page.props.errors.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="flex justify-evenly mt-2">

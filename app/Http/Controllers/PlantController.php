@@ -55,6 +55,15 @@ class PlantController extends Controller
     }
 
     public function store(Request $request) {
+
+        $request->validate([
+            'name' => ['required', 'min:3'],
+            'species' => ['required'],
+            'pot_type' => ['required'],
+            'pot_size' => ['required'],
+            'soil_type' => ['required'],
+            'height' => ['required'],
+        ]);
         
         $plant = new Plant($request->only([
             'name',
