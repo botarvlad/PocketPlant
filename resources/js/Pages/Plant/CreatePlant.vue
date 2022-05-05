@@ -100,6 +100,14 @@
                             </div>
                             <div v-if="formPosition == 5">
                                 <h2>Adauga o poza cu planta (skippable)</h2>
+                                <DropZone
+                                    ref="pictureInput"
+                                    @drop.prevent="drop"
+                                    @change="selectedFile"
+                                />
+                                <div class="file-info">
+                                    File: {{ form.img.name }}
+                                </div>
                             </div>
                             <div v-if="formPosition == 6">
                                 <h2>Numele plantei</h2>
@@ -166,9 +174,9 @@ import JetLabel from "@/Jetstream/Label.vue";
 import JetValidationErrors from "@/Jetstream/ValidationErrors.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/solid";
-import Vue from "vue";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import DropZone from "../Components/DropZone.vue";
 
 export default {
     components: {
@@ -186,6 +194,7 @@ export default {
         ChevronRightIcon,
         JetButton,
         vSelect,
+        DropZone,
     },
     props: ["devices", "plants"],
     data() {
@@ -197,6 +206,7 @@ export default {
                 pot_size: "5",
                 soil_type: "",
                 height: "0",
+                img: "",
             }),
             formPosition: 0,
             pot_types: [
@@ -233,6 +243,12 @@ export default {
 
         submit() {
             this.form.post(route("plants.store"));
+        },
+        drop(e) {
+            this.form.img = e.dataTransfer.files[0];
+        },
+        selectedFile() {
+            this.form.img = document.querySelector(".dropzoneFile").files[0];
         },
     },
 };

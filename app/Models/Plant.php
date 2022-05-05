@@ -30,6 +30,7 @@ class Plant extends Model
         'pot_size',
         'soil_type',
         'height',
+        'profile_photo_path'
     ];
 
     public function plantDatas() {

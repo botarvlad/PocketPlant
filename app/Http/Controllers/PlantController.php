@@ -77,6 +77,14 @@ class PlantController extends Controller
         $plant->user_id = auth()->user()->id;
         // $ceva = Device::where('mac_address', $request->device)->get();
         // $plant->device_id = $ceva[0]->id;
+        // $plant->profile_photo_path = $request->img ?? '';
+
+        if($request->file()) {
+            $file_name = time().'_'.$request->file('img')->getClientOriginalName();
+            $file_path = $request->file('img')->storeAs('uploads', $file_name, 'public');
+
+            $plant->profile_photo_path = '/storage/' . $file_path;
+        }
 
         $plant->save();
 
