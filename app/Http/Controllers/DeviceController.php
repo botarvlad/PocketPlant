@@ -19,9 +19,10 @@ class DeviceController extends Controller
     }
 
     public function view(Device $device) {
+
         return Inertia::render('Device/DeviceDetails', [
             'device' => $device,
-            'plant_host' => Plant::where('id', $device->plant_id)->first(),
+            'plant_host' => Plant::where('id', $device->plant_id)->first() ?? 'No plant',
             'plants' => Plant::where('user_id', auth()->user()->id)->get()
         ]);
     }
@@ -71,5 +72,15 @@ class DeviceController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function unsign(Device $device) {
+        $device = Device::find($device->id);
+
+        $device->plant_id = null;
+
+        $device->save();
+
+        return redirect()->back();
     }
 }

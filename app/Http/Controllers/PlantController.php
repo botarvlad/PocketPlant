@@ -90,4 +90,20 @@ class PlantController extends Controller
 
         return redirect()->route('plants.index');
     }
+
+    public function destroy(Plant $plant) {
+        
+        $device = Device::where('plant_id', $plant->id)->first(); 
+        if ($device) {
+            Device::where('plant_id', $plant->id)->update(['plant_id' => null]);
+        }
+        PlantAirHumidity::where('plant_id', $plant->id)->delete();
+        PlantSoilMoisture::where('plant_id', $plant->id)->delete();
+        PlantTemperature::where('plant_id', $plant->id)->delete();
+        DB::table('water_times')->where('plant_id', $plant->id)->delete();
+
+        Plant::destroy($plant->id);
+
+        return redirect()->route('plants.index');
+    }
 }

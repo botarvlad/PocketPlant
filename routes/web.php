@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/plants/add', [PlantController::class, 'add'])->name('plants.add');
     Route::post('/plants/create',[PlantController::class, 'store'])->name('plants.store');
     Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
+    Route::delete('/plants/{plant}/delete', [PlantController::class, 'destroy'])->name('plants.destroy');
 
     // Devices
     Route::patch('/devices/switch_plant',[DeviceController::class, 'switch_plant'])->name('devices.switch_plant');
@@ -53,4 +54,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/devices/add', [DeviceController::class, 'add'])->name('devices.add');
     Route::get('/devices/{device}',[DeviceController::class, 'view'])->name('devices.view');
     Route::patch('/devices/{device}',[DeviceController::class, 'claim'])->name('devices.claim');
+    Route::patch('/devices/{device}/unsign', [DeviceController::class, 'unsign'])->name('devices.unsign');
 });

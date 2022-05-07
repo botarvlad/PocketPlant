@@ -66,7 +66,12 @@ class MqttSubscribeCommand extends Command
         $mqtt->subscribe('home/boti/plant/temp', function ($topic, $message) {
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
             $plantTemperature = new PlantTemperature;
-            $plantTemperature->temp = $umid_sol;
+            $decoded_message = json_decode($message);
+            $device = Device::where('mac_address', $decoded_message->mac)->first();
+            $plant_id = $device->plant->id;
+            $plantTemperature->plant_id = $plant_id;
+            $temp = $decoded_message->temp;
+            $plantTemperature->temp = $temp;
             $plantTemperature->save();
         }, 1);
 
@@ -89,7 +94,12 @@ class MqttSubscribeCommand extends Command
         $mqtt->subscribe('home/boti/plant/umid_atm', function ($topic, $message) {
             echo sprintf("Received message on topic [%s]: %s\n", $topic, $message);
             $plantAirHumidity = new PlantAirHumidity;
-            $plantAirHumidity->umid_atm = $message;
+            $decoded_message = json_decode($message);
+            $device = Device::where('mac_address', $decoded_message->mac)->first();
+            $plant_id = $device->plant->id;
+            $plantAirHumidity->plant_id=  $plant_id;
+            $umid_atm = $decoded_message->umid_atm;
+            $plantAirHumidity->umid_atm = $umid_atm;
             $plantAirHumidity->save();
         }, 1);
         

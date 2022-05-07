@@ -1,9 +1,26 @@
 <template>
     <app-layout title="My Plants">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 My Plants
-            </h2>
+            </h2> -->
+            <header-content>
+                <template #title>
+                    <h2
+                        class="font-semibold text-xl text-gray-800 leading-tight"
+                    >
+                        {{ plant.name }}
+                    </h2>
+                </template>
+                <template #actions v-if="$page.props.user">
+                    <action-button
+                        :link="route('plants.destroy', plant.id)"
+                        name="Delete Plant"
+                        icon="plus-circle"
+                        method="delete"
+                    />
+                </template>
+            </header-content>
         </template>
 
         <div class="py-12">
@@ -32,20 +49,52 @@
                                     : "No data yet"
                             }}
                         </div>
+                        <h3 class="mt-4">Humidity records</h3>
+                        <table-lite
+                            :is-loading="soilTable.isLoading"
+                            :columns="soilTable.columns"
+                            :rows="soilTable.rows"
+                            :total="soilTable.totalRecordCount"
+                            :sortable="soilTable.sortable"
+                            @is-finished="soilTable.isLoading = false"
+                        />
+                        <h3 class="mt-4">Humidity records</h3>
+                        <table-lite
+                            :is-loading="tempTable.isLoading"
+                            :columns="tempTable.columns"
+                            :rows="tempTable.rows"
+                            :total="tempTable.totalRecordCount"
+                            :sortable="tempTable.sortable"
+                            @is-finished="tempTable.isLoading = false"
+                        />
+                        <h3 class="mt-4">Humidity records</h3>
+                        <table-lite
+                            :is-loading="airTable.isLoading"
+                            :columns="airTable.columns"
+                            :rows="airTable.rows"
+                            :total="airTable.totalRecordCount"
+                            :sortable="airTable.sortable"
+                            @is-finished="airTable.isLoading = false"
+                        />
                     </div>
                 </div>
             </div>
         </div>
-        <button @click="send" class="rounded-md bg-gray-700">Click</button>
     </app-layout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import HeaderContent from "../../Components/HeaderContent.vue";
+import ActionButton from "../../Components/Button.vue";
+import TableLite from "vue3-table-lite";
 
 export default {
     components: {
         AppLayout,
+        HeaderContent,
+        ActionButton,
+        TableLite,
     },
 
     props: [
@@ -57,7 +106,83 @@ export default {
     ],
 
     data() {
-        return {};
+        return {
+            soilTable: {
+                isLoading: false,
+                columns: [
+                    {
+                        label: "Date",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                    },
+                    {
+                        label: "Umiditate Sol",
+                        field: "umid_sol",
+                        width: "2%",
+                        sortable: true,
+                    },
+                ],
+                rows: this.plant_datas.plant_soil_records,
+                totalRecordCount: 0,
+                pageSize: 2,
+                sortable: {
+                    order: "id",
+                    sort: "asc",
+                },
+            },
+            tempTable: {
+                isLoading: false,
+                columns: [
+                    {
+                        label: "Date",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                    },
+                    {
+                        label: "Temperatura Camera",
+                        field: "temp",
+                        width: "2%",
+                        sortable: true,
+                    },
+                ],
+                rows: this.plant_datas.plant_temp_records,
+                totalRecordCount: 0,
+                pageSize: 2,
+                sortable: {
+                    order: "id",
+                    sort: "asc",
+                },
+            },
+            airTable: {
+                isLoading: false,
+                columns: [
+                    {
+                        label: "Date",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                    },
+                    {
+                        label: "Umiditate Aer",
+                        field: "umid_atm",
+                        width: "2%",
+                        sortable: true,
+                    },
+                ],
+                rows: this.plant_datas.plant_air_records,
+                totalRecordCount: 0,
+                pageSize: 2,
+                sortable: {
+                    order: "id",
+                    sort: "asc",
+                },
+            },
+        };
     },
     computed: {
         mapped_humidity() {

@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             PlantSeeder::class,
             DevicesSeeder::class,
-            PlantDataSeeder::class,
             PlantTemperatureSeeder::class,
             PlantSoilMoistureSeeder::class,
             PlantAirHumiditySeeder::class,

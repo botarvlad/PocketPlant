@@ -9,7 +9,14 @@
                         My Devices
                     </h2>
                 </template>
-                <template #actions v-if="$page.props.user"> </template>
+                <template #actions v-if="$page.props.user">
+                    <action-button
+                        :link="route('devices.unsign', device.id)"
+                        name="Unsign Device"
+                        icon="plus-circle"
+                        method="patch"
+                    />
+                </template>
             </header-content>
         </template>
 
@@ -21,7 +28,10 @@
                             class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
                         >
                             <p>MAC-ul device-ului: {{ device.mac_address }}</p>
-                            <p>Planta in care sta: {{ plant_host.name }}</p>
+                            <p>
+                                Planta in care sta:
+                                {{ plant_host.name || "null" }}
+                            </p>
                             <v-select
                                 v-model="form.plant_host"
                                 :options="plants"

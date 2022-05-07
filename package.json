@@ -34,6 +34,7 @@
         "browser-sync-webpack-plugin": "^2.3.0",
         "dropzone-vue": "^0.1.11",
         "vue-form-wizard": "^0.8.4",
-        "vue-select": "^4.0.0-beta.3"
+        "vue-select": "^4.0.0-beta.3",
+        "vue3-table-lite": "^1.2.0"
     }
 }
