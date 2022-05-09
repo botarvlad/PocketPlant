@@ -33,6 +33,10 @@ class Plant extends Model
         'profile_photo_path'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:00',
+    ];
+
     public function plantDatas() {
         return $this->hasMany(PlantData::class);
     }

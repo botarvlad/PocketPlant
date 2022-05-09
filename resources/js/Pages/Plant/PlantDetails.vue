@@ -56,6 +56,8 @@
                             :rows="soilTable.rows"
                             :total="soilTable.totalRecordCount"
                             :sortable="soilTable.sortable"
+                            :messages="soilTable.messages"
+                            @do-search="doSearch"
                             @is-finished="soilTable.isLoading = false"
                         />
                         <h3 class="mt-4">Humidity records</h3>
@@ -88,6 +90,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import HeaderContent from "../../Components/HeaderContent.vue";
 import ActionButton from "../../Components/Button.vue";
 import TableLite from "vue3-table-lite";
+import moment from "moment";
+//! Formateaza Data din tabele si fa pagination
 
 export default {
     components: {
@@ -107,6 +111,7 @@ export default {
 
     data() {
         return {
+            moment: moment,
             soilTable: {
                 isLoading: false,
                 columns: [
@@ -116,6 +121,19 @@ export default {
                         width: "1%",
                         sortable: true,
                         isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("YYYY-MM-DD");
+                        },
+                    },
+                    {
+                        label: "Time",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("h:mm:ss");
+                        },
                     },
                     {
                         label: "Umiditate Sol",
@@ -126,7 +144,6 @@ export default {
                 ],
                 rows: this.plant_datas.plant_soil_records,
                 totalRecordCount: 0,
-                pageSize: 2,
                 sortable: {
                     order: "id",
                     sort: "asc",
@@ -141,6 +158,19 @@ export default {
                         width: "1%",
                         sortable: true,
                         isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("YYYY-MM-DD");
+                        },
+                    },
+                    {
+                        label: "Time",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("h:mm:ss");
+                        },
                     },
                     {
                         label: "Temperatura Camera",
@@ -166,6 +196,19 @@ export default {
                         width: "1%",
                         sortable: true,
                         isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("YYYY-MM-DD");
+                        },
+                    },
+                    {
+                        label: "Time",
+                        field: "created_at",
+                        width: "1%",
+                        sortable: true,
+                        isKey: true,
+                        display: function (row) {
+                            return moment(row.created_at).format("h:mm:ss");
+                        },
                     },
                     {
                         label: "Umiditate Aer",
@@ -221,6 +264,27 @@ export default {
             else if (soil_type === "moist") return [73, 88];
             else if (soil_type === "wet") return [89, 100];
         },
+        doSearch(offset, limit, order, sort) {
+            this.soilTable.isLoading = true;
+            setTimeout(() => {
+                this.soilTable.isReSearch = offset == undefined ? true : false;
+                if (offset >= 10 || limit >= 20) {
+                    limit = 20;
+                }
+                if (sort == "asc") {
+                    this.soilTable.rows = this.plant_datas.plant_soil_records;
+                } else {
+                    this.soilTable.rows = this.plant_datas.plant_soil_records;
+                }
+                this.soilTable.totalRecordCount = 20;
+                this.soilTable.sortable.order = order;
+                this.soilTable.sortable.sort = sort;
+                this.soilTable.isLoading = false;
+            }, 600);
+        },
+    },
+    created() {
+        this.doSearch(0, 10, "id", "asc");
     },
 };
 </script>
