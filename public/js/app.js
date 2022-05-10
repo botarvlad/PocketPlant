@@ -21107,110 +21107,61 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   data: function data() {
     return {
       moment: (moment__WEBPACK_IMPORTED_MODULE_4___default()),
-      soilTable: {
-        isLoading: false,
-        columns: [{
-          label: "Date",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("YYYY-MM-DD");
-          }
-        }, {
-          label: "Time",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("h:mm:ss");
-          }
-        }, {
-          label: "Umiditate Sol",
-          field: "umid_sol",
-          width: "2%",
-          sortable: true
-        }],
-        rows: this.plant_datas.plant_soil_records,
-        totalRecordCount: 0,
-        sortable: {
-          order: "id",
-          sort: "asc"
-        }
-      },
-      tempTable: {
-        isLoading: false,
-        columns: [{
-          label: "Date",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("YYYY-MM-DD");
-          }
-        }, {
-          label: "Time",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("h:mm:ss");
-          }
-        }, {
-          label: "Temperatura Camera",
-          field: "temp",
-          width: "2%",
-          sortable: true
-        }],
-        rows: this.plant_datas.plant_temp_records,
-        totalRecordCount: 0,
-        pageSize: 2,
-        sortable: {
-          order: "id",
-          sort: "asc"
-        }
-      },
-      airTable: {
-        isLoading: false,
-        columns: [{
-          label: "Date",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("YYYY-MM-DD");
-          }
-        }, {
-          label: "Time",
-          field: "created_at",
-          width: "1%",
-          sortable: true,
-          isKey: true,
-          display: function display(row) {
-            return moment__WEBPACK_IMPORTED_MODULE_4___default()(row.created_at).format("h:mm:ss");
-          }
-        }, {
-          label: "Umiditate Aer",
-          field: "umid_atm",
-          width: "2%",
-          sortable: true
-        }],
-        rows: this.plant_datas.plant_air_records,
-        totalRecordCount: 0,
-        pageSize: 2,
-        sortable: {
-          order: "id",
-          sort: "asc"
-        }
-      }
+      tableRows: 10,
+      humidPagesNo: 0,
+      airPagesNo: 0,
+      tempPagesNo: 0,
+      humidCurrentPage: 1,
+      airCurrentPage: 1,
+      tempCurrentPage: 1
     };
   },
   computed: {
+    humidDataPages: function humidDataPages() {
+      var chunkedData = [];
+
+      for (var i = 0; i < this.plant_datas.plant_soil_records.length; i += this.tableRows) {
+        var chunk = this.plant_datas.plant_soil_records.slice(i, i + this.tableRows);
+        console.log(chunk);
+        this.humidPagesNo++;
+        chunkedData.push(chunk);
+      }
+
+      return chunkedData;
+    },
+    airDataPages: function airDataPages() {
+      var chunkedData = [];
+
+      for (var i = 0; i < this.plant_datas.plant_air_records.length; i += this.tableRows) {
+        var chunk = this.plant_datas.plant_air_records.slice(i, i + this.tableRows);
+        console.log(chunk);
+        this.airPagesNo++;
+        chunkedData.push(chunk);
+      }
+
+      return chunkedData;
+    },
+    tempDataPages: function tempDataPages() {
+      var chunkedData = [];
+
+      for (var i = 0; i < this.plant_datas.plant_temp_records.length; i += this.tableRows) {
+        var chunk = this.plant_datas.plant_temp_records.slice(i, i + this.tableRows);
+        console.log(chunk);
+        this.tempPagesNo++;
+        chunkedData.push(chunk);
+      }
+
+      return chunkedData;
+    },
+    returnHumidDataPage: function returnHumidDataPage() {
+      return this.humidDataPages[this.humidCurrentPage - 1];
+    },
+    returnAirDataPage: function returnAirDataPage() {
+      return this.airDataPages[this.airCurrentPage - 1];
+    },
+    returnTempDataPage: function returnTempDataPage() {
+      return this.tempDataPages[this.tempCurrentPage - 1];
+    },
     mapped_humidity: function mapped_humidity() {
       var last_val = this.plant_datas["plant_soil_records"][this.plant_datas["plant_soil_records"].length - 1];
 
@@ -21244,32 +21195,48 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     convertSoilToValue: function convertSoilToValue(soil_type) {
       if (soil_type === "dry") return [0, 72];else if (soil_type === "moist") return [73, 88];else if (soil_type === "wet") return [89, 100];
     },
-    doSearch: function doSearch(offset, limit, order, sort) {
-      var _this = this;
+    humidPrevPage: function humidPrevPage() {
+      if (this.humidCurrentPage === 1) {
+        return;
+      }
 
-      this.soilTable.isLoading = true;
-      setTimeout(function () {
-        _this.soilTable.isReSearch = offset == undefined ? true : false;
+      this.humidCurrentPage--;
+    },
+    humidNextPage: function humidNextPage() {
+      if (this.humidCurrentPage === this.humidPagesNo) {
+        return;
+      }
 
-        if (offset >= 10 || limit >= 20) {
-          limit = 20;
-        }
+      this.humidCurrentPage++;
+    },
+    airPrevPage: function airPrevPage() {
+      if (this.airCurrentPage === 1) {
+        return;
+      }
 
-        if (sort == "asc") {
-          _this.soilTable.rows = _this.plant_datas.plant_soil_records;
-        } else {
-          _this.soilTable.rows = _this.plant_datas.plant_soil_records;
-        }
+      this.airCurrentPage--;
+    },
+    airNextPage: function airNextPage() {
+      if (this.airCurrentPage === this.airPagesNo) {
+        return;
+      }
 
-        _this.soilTable.totalRecordCount = 20;
-        _this.soilTable.sortable.order = order;
-        _this.soilTable.sortable.sort = sort;
-        _this.soilTable.isLoading = false;
-      }, 600);
+      this.airCurrentPage++;
+    },
+    tempPrevPage: function tempPrevPage() {
+      if (this.tempCurrentPage === 1) {
+        return;
+      }
+
+      this.tempCurrentPage--;
+    },
+    tempNextPage: function tempNextPage() {
+      if (this.tempCurrentPage === this.tempPagesNo) {
+        return;
+      }
+
+      this.tempCurrentPage++;
     }
-  },
-  created: function created() {
-    this.doSearch(0, 10, "id", "asc");
   }
 });
 
@@ -26395,24 +26362,33 @@ var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
-  "class": "mt-4"
-}, "Humidity records", -1
-/* HOISTED */
-);
+var _hoisted_10 = {
+  "class": "flex"
+};
 
 var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
   "class": "mt-4"
-}, "Humidity records", -1
+}, "Temp records", -1
 /* HOISTED */
 );
 
+var _hoisted_12 = {
+  "class": "flex"
+};
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+  "class": "mt-4"
+}, "Air records", -1
+/* HOISTED */
+);
+
+var _hoisted_14 = {
+  "class": "flex"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_action_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("action-button");
 
   var _component_header_content = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("header-content");
-
-  var _component_table_lite = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("table-lite");
 
   var _component_app_layout = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("app-layout");
 
@@ -26460,42 +26436,64 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* TEXT, CLASS */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, " Last time watered: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.plant_stats.last_time_watered ? $props.plant_stats.last_time_watered.created_at : "No data yet"), 1
       /* TEXT */
-      ), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_table_lite, {
-        "is-loading": $data.soilTable.isLoading,
-        columns: $data.soilTable.columns,
-        rows: $data.soilTable.rows,
-        total: $data.soilTable.totalRecordCount,
-        sortable: $data.soilTable.sortable,
-        messages: $data.soilTable.messages,
-        onDoSearch: $options.doSearch,
-        onIsFinished: _cache[0] || (_cache[0] = function ($event) {
-          return $data.soilTable.isLoading = false;
+      ), _hoisted_9, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.returnHumidDataPage, function (humid_data) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          "class": "flex",
+          key: humid_data.id
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(humid_data.created_at).format("DD-MM-YYYY")) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(humid_data.created_at).format("h:mm:ss")) + " / " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(humid_data.umid_sol), 1
+        /* TEXT */
+        );
+      }), 128
+      /* KEYED_FRAGMENT */
+      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white mr-6",
+        onClick: _cache[0] || (_cache[0] = function () {
+          return $options.humidPrevPage && $options.humidPrevPage.apply($options, arguments);
         })
-      }, null, 8
-      /* PROPS */
-      , ["is-loading", "columns", "rows", "total", "sortable", "messages", "onDoSearch"]), _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_table_lite, {
-        "is-loading": $data.tempTable.isLoading,
-        columns: $data.tempTable.columns,
-        rows: $data.tempTable.rows,
-        total: $data.tempTable.totalRecordCount,
-        sortable: $data.tempTable.sortable,
-        onIsFinished: _cache[1] || (_cache[1] = function ($event) {
-          return $data.tempTable.isLoading = false;
+      }, " < "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white",
+        onClick: _cache[1] || (_cache[1] = function () {
+          return $options.humidNextPage && $options.humidNextPage.apply($options, arguments);
         })
-      }, null, 8
-      /* PROPS */
-      , ["is-loading", "columns", "rows", "total", "sortable"]), _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_table_lite, {
-        "is-loading": $data.airTable.isLoading,
-        columns: $data.airTable.columns,
-        rows: $data.airTable.rows,
-        total: $data.airTable.totalRecordCount,
-        sortable: $data.airTable.sortable,
-        onIsFinished: _cache[2] || (_cache[2] = function ($event) {
-          return $data.airTable.isLoading = false;
+      }, " > ")]), _hoisted_11, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.returnTempDataPage, function (temp_data) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          "class": "flex",
+          key: temp_data.id
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(temp_data.created_at).format("DD-MM-YYYY")) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(temp_data.created_at).format("h:mm:ss")) + " / " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(temp_data.temp), 1
+        /* TEXT */
+        );
+      }), 128
+      /* KEYED_FRAGMENT */
+      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white mr-6",
+        onClick: _cache[2] || (_cache[2] = function () {
+          return $options.tempPrevPage && $options.tempPrevPage.apply($options, arguments);
         })
-      }, null, 8
-      /* PROPS */
-      , ["is-loading", "columns", "rows", "total", "sortable"])])])])])];
+      }, " < "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white",
+        onClick: _cache[3] || (_cache[3] = function () {
+          return $options.tempNextPage && $options.tempNextPage.apply($options, arguments);
+        })
+      }, " > ")]), _hoisted_13, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.returnAirDataPage, function (air_data) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          "class": "flex",
+          key: air_data.id
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(air_data.created_at).format("DD-MM-YYYY")) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.moment(air_data.created_at).format("h:mm:ss")) + " / " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(air_data.umid_atm), 1
+        /* TEXT */
+        );
+      }), 128
+      /* KEYED_FRAGMENT */
+      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white mr-6",
+        onClick: _cache[4] || (_cache[4] = function () {
+          return $options.airPrevPage && $options.airPrevPage.apply($options, arguments);
+        })
+      }, " < "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "bg-gray-700 text-white",
+        onClick: _cache[5] || (_cache[5] = function () {
+          return $options.airNextPage && $options.airNextPage.apply($options, arguments);
+        })
+      }, " > ")])])])])])];
     }),
     _: 1
     /* STABLE */

@@ -50,34 +50,92 @@
                             }}
                         </div>
                         <h3 class="mt-4">Humidity records</h3>
-                        <table-lite
-                            :is-loading="soilTable.isLoading"
-                            :columns="soilTable.columns"
-                            :rows="soilTable.rows"
-                            :total="soilTable.totalRecordCount"
-                            :sortable="soilTable.sortable"
-                            :messages="soilTable.messages"
-                            @do-search="doSearch"
-                            @is-finished="soilTable.isLoading = false"
-                        />
-                        <h3 class="mt-4">Humidity records</h3>
-                        <table-lite
-                            :is-loading="tempTable.isLoading"
-                            :columns="tempTable.columns"
-                            :rows="tempTable.rows"
-                            :total="tempTable.totalRecordCount"
-                            :sortable="tempTable.sortable"
-                            @is-finished="tempTable.isLoading = false"
-                        />
-                        <h3 class="mt-4">Humidity records</h3>
-                        <table-lite
-                            :is-loading="airTable.isLoading"
-                            :columns="airTable.columns"
-                            :rows="airTable.rows"
-                            :total="airTable.totalRecordCount"
-                            :sortable="airTable.sortable"
-                            @is-finished="airTable.isLoading = false"
-                        />
+                        <div
+                            class="flex"
+                            v-for="humid_data in returnHumidDataPage"
+                            :key="humid_data.id"
+                        >
+                            {{
+                                moment(humid_data.created_at).format(
+                                    "DD-MM-YYYY"
+                                )
+                            }}
+                            {{
+                                moment(humid_data.created_at).format("h:mm:ss")
+                            }}
+                            /
+                            {{ humid_data.umid_sol }}
+                        </div>
+                        <div class="flex">
+                            <button
+                                class="bg-gray-700 text-white mr-6"
+                                @click="humidPrevPage"
+                            >
+                                &lt
+                            </button>
+                            <button
+                                class="bg-gray-700 text-white"
+                                @click="humidNextPage"
+                            >
+                                >
+                            </button>
+                        </div>
+                        <h3 class="mt-4">Temp records</h3>
+                        <div
+                            class="flex"
+                            v-for="temp_data in returnTempDataPage"
+                            :key="temp_data.id"
+                        >
+                            {{
+                                moment(temp_data.created_at).format(
+                                    "DD-MM-YYYY"
+                                )
+                            }}
+                            {{ moment(temp_data.created_at).format("h:mm:ss") }}
+                            /
+                            {{ temp_data.temp }}
+                        </div>
+                        <div class="flex">
+                            <button
+                                class="bg-gray-700 text-white mr-6"
+                                @click="tempPrevPage"
+                            >
+                                &lt
+                            </button>
+                            <button
+                                class="bg-gray-700 text-white"
+                                @click="tempNextPage"
+                            >
+                                >
+                            </button>
+                        </div>
+                        <h3 class="mt-4">Air records</h3>
+                        <div
+                            class="flex"
+                            v-for="air_data in returnAirDataPage"
+                            :key="air_data.id"
+                        >
+                            {{
+                                moment(air_data.created_at).format("DD-MM-YYYY")
+                            }}
+                            {{ moment(air_data.created_at).format("h:mm:ss") }}
+                            /
+                            {{ air_data.umid_atm }}
+                        </div>
+                        <div class="flex">
+                            <button
+                                class="bg-gray-700 text-white mr-6"
+                                @click="airPrevPage"
+                            >
+                                &lt
+                            </button>
+                            <button
+                                class="bg-gray-700 text-white"
+                                @click="airNextPage"
+                            >
+                                >
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -112,122 +170,76 @@ export default {
     data() {
         return {
             moment: moment,
-            soilTable: {
-                isLoading: false,
-                columns: [
-                    {
-                        label: "Date",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("YYYY-MM-DD");
-                        },
-                    },
-                    {
-                        label: "Time",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("h:mm:ss");
-                        },
-                    },
-                    {
-                        label: "Umiditate Sol",
-                        field: "umid_sol",
-                        width: "2%",
-                        sortable: true,
-                    },
-                ],
-                rows: this.plant_datas.plant_soil_records,
-                totalRecordCount: 0,
-                sortable: {
-                    order: "id",
-                    sort: "asc",
-                },
-            },
-            tempTable: {
-                isLoading: false,
-                columns: [
-                    {
-                        label: "Date",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("YYYY-MM-DD");
-                        },
-                    },
-                    {
-                        label: "Time",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("h:mm:ss");
-                        },
-                    },
-                    {
-                        label: "Temperatura Camera",
-                        field: "temp",
-                        width: "2%",
-                        sortable: true,
-                    },
-                ],
-                rows: this.plant_datas.plant_temp_records,
-                totalRecordCount: 0,
-                pageSize: 2,
-                sortable: {
-                    order: "id",
-                    sort: "asc",
-                },
-            },
-            airTable: {
-                isLoading: false,
-                columns: [
-                    {
-                        label: "Date",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("YYYY-MM-DD");
-                        },
-                    },
-                    {
-                        label: "Time",
-                        field: "created_at",
-                        width: "1%",
-                        sortable: true,
-                        isKey: true,
-                        display: function (row) {
-                            return moment(row.created_at).format("h:mm:ss");
-                        },
-                    },
-                    {
-                        label: "Umiditate Aer",
-                        field: "umid_atm",
-                        width: "2%",
-                        sortable: true,
-                    },
-                ],
-                rows: this.plant_datas.plant_air_records,
-                totalRecordCount: 0,
-                pageSize: 2,
-                sortable: {
-                    order: "id",
-                    sort: "asc",
-                },
-            },
+            tableRows: 10,
+            humidPagesNo: 0,
+            airPagesNo: 0,
+            tempPagesNo: 0,
+            humidCurrentPage: 1,
+            airCurrentPage: 1,
+            tempCurrentPage: 1,
         };
     },
     computed: {
+        humidDataPages() {
+            const chunkedData = [];
+            for (
+                let i = 0;
+                i < this.plant_datas.plant_soil_records.length;
+                i += this.tableRows
+            ) {
+                const chunk = this.plant_datas.plant_soil_records.slice(
+                    i,
+                    i + this.tableRows
+                );
+                console.log(chunk);
+                this.humidPagesNo++;
+                chunkedData.push(chunk);
+            }
+            return chunkedData;
+        },
+        airDataPages() {
+            const chunkedData = [];
+            for (
+                let i = 0;
+                i < this.plant_datas.plant_air_records.length;
+                i += this.tableRows
+            ) {
+                const chunk = this.plant_datas.plant_air_records.slice(
+                    i,
+                    i + this.tableRows
+                );
+                console.log(chunk);
+                this.airPagesNo++;
+                chunkedData.push(chunk);
+            }
+            return chunkedData;
+        },
+        tempDataPages() {
+            const chunkedData = [];
+            for (
+                let i = 0;
+                i < this.plant_datas.plant_temp_records.length;
+                i += this.tableRows
+            ) {
+                const chunk = this.plant_datas.plant_temp_records.slice(
+                    i,
+                    i + this.tableRows
+                );
+                console.log(chunk);
+                this.tempPagesNo++;
+                chunkedData.push(chunk);
+            }
+            return chunkedData;
+        },
+        returnHumidDataPage() {
+            return this.humidDataPages[this.humidCurrentPage - 1];
+        },
+        returnAirDataPage() {
+            return this.airDataPages[this.airCurrentPage - 1];
+        },
+        returnTempDataPage() {
+            return this.tempDataPages[this.tempCurrentPage - 1];
+        },
         mapped_humidity() {
             let last_val =
                 this.plant_datas["plant_soil_records"][
@@ -264,27 +276,42 @@ export default {
             else if (soil_type === "moist") return [73, 88];
             else if (soil_type === "wet") return [89, 100];
         },
-        doSearch(offset, limit, order, sort) {
-            this.soilTable.isLoading = true;
-            setTimeout(() => {
-                this.soilTable.isReSearch = offset == undefined ? true : false;
-                if (offset >= 10 || limit >= 20) {
-                    limit = 20;
-                }
-                if (sort == "asc") {
-                    this.soilTable.rows = this.plant_datas.plant_soil_records;
-                } else {
-                    this.soilTable.rows = this.plant_datas.plant_soil_records;
-                }
-                this.soilTable.totalRecordCount = 20;
-                this.soilTable.sortable.order = order;
-                this.soilTable.sortable.sort = sort;
-                this.soilTable.isLoading = false;
-            }, 600);
+        humidPrevPage() {
+            if (this.humidCurrentPage === 1) {
+                return;
+            }
+            this.humidCurrentPage--;
         },
-    },
-    created() {
-        this.doSearch(0, 10, "id", "asc");
+        humidNextPage() {
+            if (this.humidCurrentPage === this.humidPagesNo) {
+                return;
+            }
+            this.humidCurrentPage++;
+        },
+        airPrevPage() {
+            if (this.airCurrentPage === 1) {
+                return;
+            }
+            this.airCurrentPage--;
+        },
+        airNextPage() {
+            if (this.airCurrentPage === this.airPagesNo) {
+                return;
+            }
+            this.airCurrentPage++;
+        },
+        tempPrevPage() {
+            if (this.tempCurrentPage === 1) {
+                return;
+            }
+            this.tempCurrentPage--;
+        },
+        tempNextPage() {
+            if (this.tempCurrentPage === this.tempPagesNo) {
+                return;
+            }
+            this.tempCurrentPage++;
+        },
     },
 };
 </script>
