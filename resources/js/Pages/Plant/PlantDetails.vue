@@ -1,9 +1,6 @@
 <template>
     <app-layout title="My Plants">
         <template #header>
-            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                My Plants
-            </h2> -->
             <header-content>
                 <template #title>
                     <h2
@@ -14,6 +11,12 @@
                 </template>
                 <template #actions v-if="$page.props.user">
                     <action-button
+                        :link="route('plants.edit', plant.id)"
+                        name="Edit Plant"
+                        icon="plus-circle"
+                        method="get"
+                    />
+                    <action-button
                         :link="route('plants.destroy', plant.id)"
                         name="Delete Plant"
                         icon="plus-circle"
@@ -23,7 +26,7 @@
             </header-content>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 bg-opacity-40">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
@@ -41,7 +44,7 @@
                                     : "Nici un device atasat"
                             }}
                         </p>
-                        <div>
+                        <div class="mb-6">
                             Last time watered:
                             {{
                                 plant_stats.last_time_watered
@@ -49,92 +52,151 @@
                                     : "No data yet"
                             }}
                         </div>
-                        <h3 class="mt-4">Humidity records</h3>
-                        <div
-                            class="flex"
-                            v-for="humid_data in returnHumidDataPage"
-                            :key="humid_data.id"
-                        >
-                            {{
-                                moment(humid_data.created_at).format(
-                                    "DD-MM-YYYY"
-                                )
-                            }}
-                            {{
-                                moment(humid_data.created_at).format("h:mm:ss")
-                            }}
-                            /
-                            {{ humid_data.umid_sol }}
-                        </div>
-                        <div class="flex">
-                            <button
-                                class="bg-gray-700 text-white mr-6"
-                                @click="humidPrevPage"
+                        <div>
+                            <h2 class="text-2xl mb-4">Istoric Umiditate:</h2>
+                            <div class="grid grid-cols-3 text-xl pl-4">
+                                <div>Data</div>
+                                <div>Ora</div>
+                                <div>Umiditatea solului</div>
+                            </div>
+                            <div
+                                v-for="humid_data in returnHumidDataPage"
+                                :key="humid_data.id"
+                                class="grid grid-cols-3 border-t-2"
                             >
-                                &lt
-                            </button>
-                            <button
-                                class="bg-gray-700 text-white"
-                                @click="humidNextPage"
-                            >
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(humid_data.created_at).format(
+                                            "DD-MM-YYYY"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(humid_data.created_at).format(
+                                            "h:mm:ss"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{ humid_data.umid_sol }} %
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-4">
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="humidPrevPage"
                                 >
-                            </button>
-                        </div>
-                        <h3 class="mt-4">Temp records</h3>
-                        <div
-                            class="flex"
-                            v-for="temp_data in returnTempDataPage"
-                            :key="temp_data.id"
-                        >
-                            {{
-                                moment(temp_data.created_at).format(
-                                    "DD-MM-YYYY"
-                                )
-                            }}
-                            {{ moment(temp_data.created_at).format("h:mm:ss") }}
-                            /
-                            {{ temp_data.temp }}
-                        </div>
-                        <div class="flex">
-                            <button
-                                class="bg-gray-700 text-white mr-6"
-                                @click="tempPrevPage"
-                            >
-                                &lt
-                            </button>
-                            <button
-                                class="bg-gray-700 text-white"
-                                @click="tempNextPage"
-                            >
+                                    &lt
+                                </button>
+                                <div>
+                                    {{ humidCurrentPage }} of {{ humidPagesNo }}
+                                </div>
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="humidNextPage"
                                 >
-                            </button>
+                                    >
+                                </button>
+                            </div>
                         </div>
-                        <h3 class="mt-4">Air records</h3>
-                        <div
-                            class="flex"
-                            v-for="air_data in returnAirDataPage"
-                            :key="air_data.id"
-                        >
-                            {{
-                                moment(air_data.created_at).format("DD-MM-YYYY")
-                            }}
-                            {{ moment(air_data.created_at).format("h:mm:ss") }}
-                            /
-                            {{ air_data.umid_atm }}
-                        </div>
-                        <div class="flex">
-                            <button
-                                class="bg-gray-700 text-white mr-6"
-                                @click="airPrevPage"
+                        <div>
+                            <h2 class="text-2xl mb-4">Istoric Temperatura:</h2>
+                            <div class="grid grid-cols-3 text-xl pl-4">
+                                <div>Data</div>
+                                <div>Ora</div>
+                                <div>Temperatura camerei</div>
+                            </div>
+                            <div
+                                v-for="temp_data in returnTempDataPage"
+                                :key="temp_data.id"
+                                class="grid grid-cols-3 border-t-2"
                             >
-                                &lt
-                            </button>
-                            <button
-                                class="bg-gray-700 text-white"
-                                @click="airNextPage"
-                            >
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(temp_data.created_at).format(
+                                            "DD-MM-YYYY"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(temp_data.created_at).format(
+                                            "h:mm:ss"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{ temp_data.temp }}
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-4">
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="tempPrevPage"
                                 >
-                            </button>
+                                    &lt
+                                </button>
+                                <div>
+                                    {{ tempCurrentPage }} of {{ tempPagesNo }}
+                                </div>
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="tempNextPage"
+                                >
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl mb-4">
+                                Istoric Umiditate Camera:
+                            </h2>
+                            <div class="grid grid-cols-3 text-xl pl-4">
+                                <div>Data</div>
+                                <div>Ora</div>
+                                <div>Umiditatea camerei</div>
+                            </div>
+                            <div
+                                v-for="air_data in returnAirDataPage"
+                                :key="air_data.id"
+                                class="grid grid-cols-3 border-t-2"
+                            >
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(air_data.created_at).format(
+                                            "DD-MM-YYYY"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{
+                                        moment(air_data.created_at).format(
+                                            "h:mm:ss"
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-xl py-2 px-4">
+                                    {{ air_data.umid_atm }}
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-4">
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="airPrevPage"
+                                >
+                                    &lt
+                                </button>
+                                <div>
+                                    {{ airCurrentPage }} of {{ airPagesNo }}
+                                </div>
+                                <button
+                                    class="px-6 py-2 rounded-md bg-green-600 font-extrabold text-white"
+                                    @click="airNextPage"
+                                >
+                                    >
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,7 +253,6 @@ export default {
                     i,
                     i + this.tableRows
                 );
-                console.log(chunk);
                 this.humidPagesNo++;
                 chunkedData.push(chunk);
             }
@@ -208,7 +269,6 @@ export default {
                     i,
                     i + this.tableRows
                 );
-                console.log(chunk);
                 this.airPagesNo++;
                 chunkedData.push(chunk);
             }
@@ -225,7 +285,6 @@ export default {
                     i,
                     i + this.tableRows
                 );
-                console.log(chunk);
                 this.tempPagesNo++;
                 chunkedData.push(chunk);
             }

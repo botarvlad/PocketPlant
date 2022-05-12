@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/plants/add', [PlantController::class, 'add'])->name('plants.add');
     Route::post('/plants/create',[PlantController::class, 'store'])->name('plants.store');
     Route::get('/plants/{plant}',[PlantController::class, 'view'])->name('plants.view');
+    Route::get('/plants/{plant}/edit',[PlantController::class, 'edit'])->name('plants.edit');
+    Route::post('/plants/{plant}/update',[PlantController::class, 'update'])->name('plants.update');
     Route::delete('/plants/{plant}/delete', [PlantController::class, 'destroy'])->name('plants.destroy');
 
     // Devices

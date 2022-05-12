@@ -25,9 +25,9 @@ class PlantController extends Controller
         $plant_stats = []; 
         $plant_datas = [];
 
-        $plant_soil_records = PlantSoilMoisture::where('plant_id', $plant->id)->get()->toArray();
-        $plant_temp_records = PlantTemperature::where('plant_id', $plant->id)->get()->toArray();
-        $plant_air_records = PlantAirHumidity::where('plant_id', $plant->id)->get()->toArray();
+        $plant_soil_records = PlantSoilMoisture::where('plant_id', $plant->id)->orderBy('created_at', 'desc')->get()->toArray();
+        $plant_temp_records = PlantTemperature::where('plant_id', $plant->id)->orderBy('created_at', 'desc')->get()->toArray();
+        $plant_air_records = PlantAirHumidity::where('plant_id', $plant->id)->orderBy('created_at', 'desc')->get()->toArray();
 
         $plant_datas['plant_soil_records'] = $plant_soil_records;
         $plant_datas['plant_temp_records'] = $plant_temp_records;
@@ -89,6 +89,25 @@ class PlantController extends Controller
         $plant->save();
 
         return redirect()->route('plants.index');
+    }
+
+    public function edit(Plant $plant) {
+        return Inertia::render('Plant/Edit', [
+            'plants' => DB::table('plants_care')->get(),
+            'plant' => Plant::find($plant->id)
+        ]);
+    }
+
+    public function update(Request $request, Plant $plant) {
+
+        $plant->update($request->only([
+            'name',
+            'species','pot_type','pot_size','soil_type','height','profile_photo_path'
+        ]));
+
+        $plant->save();
+
+        return redirect()->route('plants.view', $plant->id);
     }
 
     public function destroy(Plant $plant) {
