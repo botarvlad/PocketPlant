@@ -53,11 +53,11 @@
 
                     <a href="https://laravel.com/docs">
                         <div
-                            class="mt-3 flex items-center text-sm font-semibold text-indigo-700"
+                            class="mt-3 flex items-center text-sm font-semibold text-green-700"
                         >
                             <div>Explore the documentation</div>
 
-                            <div class="ml-1 text-indigo-500">
+                            <div class="ml-1 text-green-500">
                                 <svg
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
@@ -108,11 +108,11 @@
 
                     <a href="https://laracasts.com">
                         <div
-                            class="mt-3 flex items-center text-sm font-semibold text-indigo-700"
+                            class="mt-3 flex items-center text-sm font-semibold text-green-700"
                         >
                             <div>Start watching Laracasts</div>
 
-                            <div class="ml-1 text-indigo-500">
+                            <div class="ml-1 text-green-500">
                                 <svg
                                     viewBox="0 0 20 20"
                                     fill="currentColor"

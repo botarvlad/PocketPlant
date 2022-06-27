@@ -163,6 +163,8 @@ class MqttSubscribeCommand extends Command
             'updated_at' => now()
         ]);
 
+        echo sprintf("Pompa pornita");
+
         $m->publish("home/boti/actions/run_pump", "on", 0);
     }
 }
